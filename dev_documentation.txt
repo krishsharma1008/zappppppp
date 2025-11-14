@@ -4684,3 +4684,53 @@ STATUS: COMPLETE ✅
 ================================================================================
 End of Entry
 ================================================================================
+================================================================================
+TASK: Fix Netlify publish path deployment error
+Date: November 14, 2025
+Time: 14:26 IST
+================================================================================
+
+PROBLEM:
+--------
+Netlify deployment was failing with error:
+"Deploy did not succeed: Deploy directory 'front-end/front-end/.output/public' does not exist"
+
+ROOT CAUSE:
+-----------
+The publish path in netlify.toml was incorrectly set to "front-end/.output/public" while the 
+base directory was already set to "front-end". This caused Netlify to look for a duplicated 
+path: front-end/front-end/.output/public instead of front-end/.output/public.
+
+When base = "front-end" is set, Netlify changes into that directory before building, so 
+the publish path must be relative to that base directory, not include "front-end/" again.
+
+CHANGE:
+-------
+- Updated publish path in netlify.toml from "front-end/.output/public" to ".output/public"
+- The path is now correctly relative to the base directory
+
+FILES MODIFIED:
+---------------
+- netlify.toml (line 4: publish path corrected)
+
+VERIFICATION:
+-------------
+- Verified Nuxt configuration has nitro.preset = "netlify" which outputs to .output/public
+- Confirmed that with base = "front-end", the publish path ".output/public" will correctly 
+  resolve to front-end/.output/public during deployment
+- Static assets (videos, fonts, images) from public/ folder will be copied to .output/public 
+  during build
+
+EXPECTED RESULT:
+----------------
+After this fix, Netlify will:
+1. Change to front-end/ directory (base)
+2. Run npm install && npm run build
+3. Find publish directory at .output/public (relative to base)
+4. Successfully deploy the application with all static assets
+
+STATUS: COMPLETE ✅
+
+================================================================================
+End of Entry
+================================================================================

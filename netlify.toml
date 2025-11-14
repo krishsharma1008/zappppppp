@@ -1,7 +1,7 @@
 [build]
   base = "front-end"
   command = "npm install && npm run build"
-  publish = "front-end/.output/public"
+  publish = ".output/public"
 
 [build.environment]
   NODE_VERSION = "20"
