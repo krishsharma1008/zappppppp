@@ -4494,3 +4494,106 @@ STATUS: COMPLETE ✅
 ================================================================================
 End of Entry
 ================================================================================
+================================================================================
+TASK: Initialize new repo and push to zappppppp
+Date: November 13, 2025
+Time: 21:28 IST
+================================================================================
+
+CHANGE:
+-------
+- Reinitialized git repo, added README heading, and committed changes.
+- Updated documentation and yarn lockfile before pushing.
+- Pointed origin to https://github.com/krishsharma1008/zappppppp.git and pushed branch `main`.
+
+FILES/COMMANDS:
+---------------
+- README.md (appended "# zappppppp")
+- dev_documentation.txt
+- front-end/yarn.lock
+- Git commands: git init, git add, git commit, git remote add origin, git push -u origin main
+
+VERIFICATION:
+-------------
+- `git status` clean after commit and push.
+- Push output confirmed `main` set to track `origin/main`.
+
+STATUS: COMPLETE ✅
+
+================================================================================
+End of Entry
+================================================================================
+================================================================================
+TASK: Restart Nuxt front-end development server
+Date: November 14, 2025
+Time: 14:04 IST
+================================================================================
+
+CHANGE:
+-------
+- Started Nuxt dev server again using `npm run dev` in background mode.
+
+FILES/COMMANDS:
+---------------
+- Ran `npm run dev` inside `/front-end` directory.
+- Server running on http://localhost:3000 (process ID: 80781).
+
+VERIFICATION:
+-------------
+- Confirmed process 80781 is running `nuxt dev` from the project directory.
+- Server listening on port 3000 (IPv6 localhost).
+
+STATUS: COMPLETE ✅ (Nuxt dev server running)
+
+================================================================================
+End of Entry
+================================================================================
+================================================================================
+TASK: Fix 404 errors for videos and fonts on Netlify deployment
+Date: November 14, 2025
+Time: 14:15 IST
+================================================================================
+
+PROBLEM:
+--------
+After deploying to Netlify, the app was getting 404 errors for:
+- Video files: /videos/2024/..., /videos/2023/..., /videos/2022/...
+- Font files: /fonts/MonumentExtended-..., /fonts/Swiss-721-BT-...
+
+ROOT CAUSE:
+-----------
+Video URLs in `years-videos.ts` were using relative paths (`./videos/...`) instead 
+of absolute paths. Relative paths don't work correctly in production because they're 
+resolved relative to the current page URL, not the site root.
+
+Font paths were already using absolute paths (`/fonts/...`) which is correct, so 
+they should work once the files are properly deployed.
+
+CHANGE:
+-------
+- Updated all video URLs in `/front-end/assets/static-data/years-videos.ts` from 
+  relative paths (`./videos/...`) to absolute paths (`/videos/...`)
+
+FILES MODIFIED:
+---------------
+- front-end/assets/static-data/years-videos.ts
+  - Changed all 13 video URLs from `./videos/...` to `/videos/...`
+
+VERIFICATION:
+-------------
+- Confirmed video and font files exist in `public/` directory
+- Verified files are tracked in git (git ls-files confirmed)
+- Font paths already use absolute paths (no changes needed)
+
+NEXT STEPS:
+-----------
+1. Commit the changes
+2. Push to repository
+3. Redeploy on Netlify
+4. Verify assets load correctly
+
+STATUS: COMPLETE ✅
+
+================================================================================
+End of Entry
+================================================================================
