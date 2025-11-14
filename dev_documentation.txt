@@ -4734,3 +4734,107 @@ STATUS: COMPLETE ✅
 ================================================================================
 End of Entry
 ================================================================================
+================================================================================
+TASK: Fix Netlify deployment - Correct publish directory for Nitro Netlify preset
+Date: November 14, 2025
+Time: 14:38 IST
+================================================================================
+
+PROBLEM:
+--------
+Netlify deployment continued to fail even after fixing the relative path issue.
+Error: "Deploy directory 'front-end/.output/public' does not exist"
+
+ROOT CAUSE ANALYSIS:
+--------------------
+After investigation, discovered that `nuxt.config.ts` sets `nitro.preset = "netlify"`, 
+which changes the output structure completely:
+
+1. **Netlify preset output structure:**
+   - Static assets → `dist/` (NOT `.output/public`)
+   - Server functions → `.netlify/functions-internal/` (NOT `.output/`)
+   
+2. **Previous fix was incorrect:**
+   - Changed publish path to `.output/public` (relative to base)
+   - But Netlify preset never creates `.output/public` directory
+   - The preset uses `dist/` for static assets instead
+
+3. **Why this happened:**
+   - Default Nitro builds output to `.output/public`
+   - Netlify preset has a different output structure optimized for Netlify
+   - Configuration didn't account for preset-specific output paths
+
+SOLUTION:
+---------
+Updated `netlify.toml` to match the actual Netlify preset output structure:
+
+1. **Changed publish directory:**
+   - From: `publish = ".output/public"`
+   - To: `publish = "dist"`
+
+2. **Added functions directory configuration:**
+   - Added `[functions]` section
+   - Set `directory = ".netlify/functions-internal"`
+   - This tells Netlify where to find serverless functions
+
+3. **Added explanatory comments:**
+   - Documented why `dist/` is used
+   - Explained the Netlify preset output structure
+
+FILES MODIFIED:
+---------------
+- netlify.toml
+  - Changed publish from `.output/public` to `dist`
+  - Added `[functions]` section with directory configuration
+  - Added comments explaining the structure
+
+VERIFICATION:
+-------------
+1. **Local build test:**
+   - Ran `npm run build` in front-end directory
+   - Confirmed build completes successfully
+   - Verified output structure matches configuration
+
+2. **Output directory verification:**
+   - ✓ `dist/` directory exists with static assets
+   - ✓ `dist/videos/` contains video files
+   - ✓ `dist/fonts/` contains font files
+   - ✓ `dist/images/` contains image files
+   - ✓ `.netlify/functions-internal/` contains server functions
+   - ✓ `.netlify/functions-internal/server/` contains SSR function bundle
+
+3. **Build output confirmation:**
+   - Build log shows: `[nitro] ✔ Generated public dist`
+   - Server functions created in `.netlify/functions-internal/server/`
+   - All static assets from `public/` folder copied to `dist/`
+
+TROUBLESHOOTING NOTES:
+----------------------
+**Key difference between Nitro presets:**
+- **Default preset:** Outputs to `.output/public/` for static assets
+- **Netlify preset:** Outputs to `dist/` for static assets and `.netlify/functions-internal/` for functions
+
+**When using `nitro.preset = "netlify"`:**
+- Always use `publish = "dist"` in netlify.toml
+- Always configure `[functions]` section pointing to `.netlify/functions-internal`
+- Static assets from `public/` folder are automatically copied to `dist/` during build
+
+**Prevention:**
+- Always verify output structure after changing Nitro preset
+- Test build locally before pushing to catch configuration mismatches
+- Document preset-specific output paths in netlify.toml comments
+
+EXPECTED RESULT:
+----------------
+After this fix:
+1. Netlify will find publish directory at `front-end/dist/` (relative to base)
+2. Static assets (videos, fonts, images) will be served from `dist/`
+3. Server functions will be deployed from `.netlify/functions-internal/`
+4. SSR routing will work correctly with the redirect configuration
+5. All 404 errors for static assets should be resolved
+
+STATUS: COMPLETE ✅
+
+================================================================================
+End of Entry
+================================================================================

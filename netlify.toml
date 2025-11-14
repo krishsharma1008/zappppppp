@@ -1,12 +1,19 @@
+# Netlify configuration for Nuxt 3 with Nitro Netlify preset
+# The Netlify preset outputs static assets to dist/ and server functions to .netlify/functions-internal/
 [build]
   base = "front-end"
   command = "npm install && npm run build"
-  publish = ".output/public"
+  # Netlify preset outputs static assets to dist/ (not .output/public)
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
 
-# Handle client-side routing - static assets are served automatically from public folder
+# Serverless functions directory - Netlify preset outputs functions here
+[functions]
+  directory = ".netlify/functions-internal"
+
+# Handle client-side routing - redirect all routes to SSR function
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
