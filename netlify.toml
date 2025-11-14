@@ -1,0 +1,14 @@
+[build]
+  base = "front-end"
+  command = "npm install && npm run build"
+  publish = "front-end/.output/public"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Handle client-side routing - static assets are served automatically from public folder
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+

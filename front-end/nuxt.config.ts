@@ -88,6 +88,9 @@ export default defineNuxtConfig({
     "~/components/molecules",
     "~/components/organisms",
   ],
+  nitro: {
+    preset: "netlify",
+  },
   // https://umami.nuxt.dev/getting-started/installation
   ...(runtimeConfig.umamiId && runtimeConfig.umamiHost && {
     umami: {
