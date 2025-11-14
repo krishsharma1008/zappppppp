@@ -4,7 +4,7 @@
   publish = "front-end/.output/public"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 # Handle client-side routing - static assets are served automatically from public folder
 [[redirects]]

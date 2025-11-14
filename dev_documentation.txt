@@ -4649,3 +4649,38 @@ STATUS: COMPLETE ✅
 ================================================================================
 End of Entry
 ================================================================================
+================================================================================
+TASK: Fix Node version compatibility issue for Netlify build
+Date: November 14, 2025
+Time: 14:21 IST
+================================================================================
+
+PROBLEM:
+--------
+Netlify build was failing with error:
+"@supabase/supabase-js@2.79.0: The engine "node" is incompatible with this module. 
+Expected version ">=20.0.0". Got "18.20.8""
+
+ROOT CAUSE:
+-----------
+The netlify.toml was configured to use Node 18, but @supabase/supabase-js@2.79.0 
+requires Node >= 20.0.0.
+
+CHANGE:
+-------
+- Updated NODE_VERSION in netlify.toml from "18" to "20"
+
+FILES MODIFIED:
+---------------
+- netlify.toml (updated NODE_VERSION)
+
+VERIFICATION:
+-------------
+- Node 20 is now specified in Netlify build environment
+- This should resolve the Supabase dependency compatibility issue
+
+STATUS: COMPLETE ✅
+
+================================================================================
+End of Entry
+================================================================================
